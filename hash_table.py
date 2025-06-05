@@ -14,7 +14,7 @@ import random, sys, time
 # |key|: string
 # Return value: a hash value
 def calculate_hash(key):
-    assert type(key) == str
+    assert isinstance(key, str)
     # Note: This is not a good hash function. Make it better!
     hash = 0
     for i in key:
@@ -29,7 +29,7 @@ class Item:
     # |next|: The next item in the linked list. If this is the last item in the
     #         linked list, |next| is None.
     def __init__(self, key, value, next):
-        assert type(key) == str
+        assert isinstance(key, str)
         self.key = key
         self.value = value
         self.next = next
@@ -60,7 +60,7 @@ class HashTable:
     # Return value: True if a new item is added. False if the key already exists
     #               and the value is updated.
     def put(self, key, value):
-        assert type(key) == str
+        assert isinstance(key, str)
         check_size(self.size(), self.bucket_size)  # Don't remove this code.
         bucket_index = calculate_hash(key) % self.bucket_size
         item = self.buckets[bucket_index]
@@ -80,7 +80,7 @@ class HashTable:
     # Return value: If the item is found, (the value of the item, True) is
     #               returned. Otherwise, (None, False) is returned.
     def get(self, key):
-        assert type(key) == str
+        assert isinstance(key, str)
         check_size(self.size(), self.bucket_size)  # Don't remove this code.
         bucket_index = calculate_hash(key) % self.bucket_size
         item = self.buckets[bucket_index]
@@ -96,11 +96,21 @@ class HashTable:
     # Return value: True if the item is found and deleted successfully. False
     #               otherwise.
     def delete(self, key):
-        assert type(key) == str
-        #------------------------#
-        # Write your code here!  #
-        #------------------------#
-        pass
+        assert isinstance(key, str)
+        bucket_index = calculate_hash(key) % self.bucket_size
+        item = self.buckets[bucket_index]
+        prev = None
+        while item:
+          if item.key == key:
+            if prev:
+              prev.next = item.next
+            else:
+              self.buckets[bucket_index] = item.next
+            self.item_count -= 1
+            return True
+          prev = item
+          item = item.next
+        return False
 
     # Return the total number of items in the hash table.
     def size(self):
